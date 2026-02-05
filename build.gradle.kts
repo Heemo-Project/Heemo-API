@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    id("org.springframework.boot") version "4.0.2"
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "2.2.21"
-    kotlin("kapt") version "2.2.21"
+    kotlin("plugin.jpa") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
 }
 
 group = "com.yeonghoon"
@@ -27,7 +27,7 @@ repositories {
     mavenCentral()
 }
 
-extra["springModulithVersion"] = "2.0.2"
+extra["springModulithVersion"] = "1.3.1"
 
 dependencies {
     // --- Spring Boot Starters ---
@@ -38,6 +38,7 @@ dependencies {
     // --- Database & JPA ---
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
+    testImplementation("com.h2database:h2") // 테스트용 인메모리 DB 추가
 
     // --- QueryDSL ---
     implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
@@ -54,7 +55,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // --- OpenAPI / Swagger ---
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 
     // --- Utilities ---
     compileOnly("org.projectlombok:lombok")
@@ -65,10 +66,9 @@ dependencies {
 
     // --- Testing ---
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
-    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("io.mockk:mockk:1.13.16")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

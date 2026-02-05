@@ -57,16 +57,14 @@ com.yeonghoon.heemo
 ## ⚙️ Getting Started
 
 ### Prerequisites
-*   JDK 17+
-*   Docker (for local DB)
+*   JDK 21
+*   PostgreSQL 16+ (Local Installation)
 
 ### Run Application
 
 1. **Database Setup**
-   ```bash
-   # docker-compose가 준비된 경우
-   docker-compose up -d
-   ```
+   *   로컬에 PostgreSQL을 설치하고 `heemo`라는 이름의 데이터베이스를 생성해주세요.
+   *   `src/main/resources/application.yaml`에서 DB 계정 정보를 확인해주세요.
 
 2. **Build & Run**
    ```bash

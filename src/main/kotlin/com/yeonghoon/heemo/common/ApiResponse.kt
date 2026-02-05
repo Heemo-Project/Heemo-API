@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "공통 API 응답 포맷")
+@Schema(description = "Common API Response Format")
 data class ApiResponse<T>(
-    @Schema(description = "요청 성공 여부", example = "true")
+    @Schema(description = "Request success status", example = "true")
     val success: Boolean,
     
-    @Schema(description = "응답 데이터 (성공 시)")
+    @Schema(description = "Response data (on success)")
     val data: T? = null,
     
-    @Schema(description = "에러 정보 (실패 시)")
+    @Schema(description = "Error information (on failure)")
     val error: ApiError? = null
 ) {
     companion object {
@@ -22,11 +22,11 @@ data class ApiResponse<T>(
     }
 }
 
-@Schema(description = "API 에러 상세 정보")
+@Schema(description = "Detailed API Error Information")
 data class ApiError(
-    @Schema(description = "에러 메시지", example = "잘못된 요청입니다.")
+    @Schema(description = "Error message", example = "Invalid request parameters.")
     val message: String,
     
-    @Schema(description = "에러 코드", example = "ERR_001")
+    @Schema(description = "Error code", example = "ERR_001")
     val code: String
 )

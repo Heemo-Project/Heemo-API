@@ -16,7 +16,7 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false,)
     val socialId: String,
 
     @Enumerated(EnumType.STRING)

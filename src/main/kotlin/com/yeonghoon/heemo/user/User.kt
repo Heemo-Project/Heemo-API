@@ -39,13 +39,6 @@ class User(
     @Column(length = 4)
     var mbti: String? = null,
 
-    @Column
-    var anniversaryDate: LocalDate? = null, // 연인이 된 일자 (디데이 기준일)
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "couple_id")
-    var couple: com.yeonghoon.heemo.couple.Couple? = null,
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var role: Role = Role.USER

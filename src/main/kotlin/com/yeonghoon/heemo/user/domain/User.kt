@@ -1,6 +1,6 @@
 package com.yeonghoon.heemo.user.domain
 
-import com.yeonghoon.heemo.common.domain.BaseEntity
+import com.yeonghoon.heemo.common.BaseEntity
 import jakarta.persistence.*
 import java.time.LocalDate
 

@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.common.domain
+package com.yeonghoon.heemo.common
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

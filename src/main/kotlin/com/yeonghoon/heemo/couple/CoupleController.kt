@@ -31,6 +31,15 @@ class CoupleController(
         coupleService.connectByInviteCode(userId, request.inviteCode)
         return ApiResponse.success(Unit)
     }
+
+    @Operation(summary = "커플 연결 해제", description = "현재 연결된 커플 관계를 해제합니다.")
+    @DeleteMapping
+    suspend fun disconnect(
+        @AuthenticationPrincipal userId: Long
+    ): ApiResponse<Unit> {
+        coupleService.disconnect(userId)
+        return ApiResponse.success(Unit)
+    }
 }
 
 data class ConnectRequest(

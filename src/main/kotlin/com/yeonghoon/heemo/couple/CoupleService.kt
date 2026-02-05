@@ -86,4 +86,40 @@ class CoupleService(
             userId2 = partner.id!!
         ))
     }
+
+    /**
+     * 커플 연결 해제
+     */
+    @Transactional
+    suspend fun disconnect(userId: Long) = withContext(Dispatchers.IO) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        val couple = user.couple ?: throw IllegalStateException("User is not in a couple")
+        val coupleId = couple.id!!
+
+        // 1. 상대방 찾기
+        val partner = userRepository.findByCoupleIdAndIdNot(coupleId, userId)
+
+        // 2. 상대방 연결 해제
+        partner.ifPresent {
+            it.couple = null
+            userRepository.save(it)
+        }
+
+        // 3. 내 연결 해제
+        user.couple = null
+        userRepository.save(user)
+
+        // 4. 커플 상태 변경
+        couple.status = CoupleStatus.DISCONNECTED
+        coupleRepository.save(couple)
+
+        // 5. 연결 해제 이벤트 발행
+        eventPublisher.publishEvent(CoupleDisconnectedEvent(
+            coupleId = coupleId,
+            userId1 = userId,
+            userId2 = partner.map { it.id }.orElse(null)
+        ))
+    }
 }

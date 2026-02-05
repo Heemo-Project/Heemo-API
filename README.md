@@ -7,70 +7,81 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-6DB33F?style=flat-square&logo=springboot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![Spring Modulith](https://img.shields.io/badge/Spring%20Modulith-Applied-green?style=flat-square)
+![QueryDSL](https://img.shields.io/badge/QueryDSL-5.1.0-blue?style=flat-square)
 
 ## 📖 Project Overview
 
-**Heemo**는 연인 간의 건강한 관계 회복과 즐거운 데이트 경험을 돕기 위해 설계된 웹 애플리케이션 서비스의 백엔드 시스템입니다.
-단순한 정보 제공을 넘어, AI 기반 감정 분석을 통한 중재 기능과 게이미피케이션(캐릭터 성장) 요소를 결합하여 사용자의 지속적인 참여를 유도합니다.
+**Heemo(희모)**는 연인 간의 건강한 관계 회복과 즐거운 데이트 경험을 돕기 위해 설계된 백엔드 시스템입니다. 
+단순한 정보 제공을 넘어, **Spring Modulith**를 활용한 모듈형 구조와 **이벤트 기반 통신**을 통해 확장성 있는 아키텍처를 지향합니다.
 
-본 프로젝트는 **확장성**과 **유지보수성**을 최우선으로 고려하여 **Spring Modulith** 기반의 모듈형 모놀리스 아키텍처로 설계되었습니다.
+---
 
-## 🚀 Key Features
+## 🛠 Tech Stack & Technical Decisions
 
-*   **Relationship Recovery (Healing)**
-    *   AI 기반 감정 분석 및 '백기(White Flag)' 푸시 알림 시스템
-    *   갈등 상황별 맞춤형 사과 문구 생성 (OpenAI API 연동 예정)
-*   **Smart Date Planner**
-    *   위치 기반(GIS) 데이트 코스 검색 및 동선 최적화
-    *   커플 공유 투두리스트 (Real-time Sync)
-*   **Gamification**
-    *   활동 기여도(Relationship Point)에 따른 커플 캐릭터 육성 시스템
-    *   화해 및 미션 성공 시 보상 지급 로직
+### 1. Backend Core
+*   **Kotlin 2.1.10**: 최신 문법과 강력한 코루틴 지원을 통해 비동기 처리 성능 최적화.
+*   **Spring Boot 3.4.2**: 라이브러리 호환성(SpringDoc 등) 및 안정성을 고려하여 최신 3.x 버전 채택.
+*   **Spring Modulith**: 도메인 간의 결합도를 낮추고 비즈니스 로직의 독립성을 보장하는 **Modular Monolith** 아키텍처 적용.
 
-## 🛠 Tech Stack & Decision Making
+### 2. Database & ORM
+*   **PostgreSQL 16**: 관계형 데이터의 안정성과 PostGIS 확장성을 고려한 선택.
+*   **QueryDSL 5.1.0**: 복잡한 동적 쿼리를 타입 안전하게 작성하고, 가독성 낮은 JPA 메소드 네이밍 문제를 해결.
 
-### Backend
-*   **Language**: `Kotlin 2.1.10` (JDK 21) - 강력한 코루틴 지원과 Null Safety를 통한 안정성 확보.
-*   **Framework**: `Spring Boot 3.4.2` - 최신 안정화 버전 활용. (기존 4.0.2-SNAPSHOT에서 라이브러리 호환성 이슈로 인해 3.4.2로 다운그레이드 및 최적화 진행)
-*   **Database**: `PostgreSQL` - 복잡한 연관 관계 및 공간 데이터(PostGIS) 확장을 고려.
-*   **ORM**: `Spring Data JPA` + `QueryDSL` - 타입 안전한(Type-safe) 동적 쿼리 작성 및 컴파일 타임 오류 감지.
-*   **Architecture**: `Spring Modulith 1.3.1` - 도메인 간 결합도를 낮추고, 추후 마이크로서비스(MSA) 전환이 용이한 구조 채택.
-*   **Documentation**: `Swagger (SpringDoc 2.8.5)` - 프론트엔드와의 원활한 협업을 위한 API 문서 자동화.
+### 3. Security & Auth
+*   **OAuth2 + JWT**: Google, Kakao 소셜 로그인을 통한 간편한 가입 및 JWT 기반의 Stateless 인증 시스템 구축.
+*   **Role-based Access Control**: 일반 사용자(USER)와 관리자(ADMIN) 권한 분리.
 
-### Infrastructure (Planned)
-*   **CI/CD**: GitHub Actions
-*   **Deploy**: AWS EC2 (Docker), RDS
+---
 
-## 🏗 Architecture (Spring Modulith)
+## 🚀 Key Features (Implemented)
 
-본 프로젝트는 도메인 주도 설계(DDD) 원칙을 따르며, Spring Modulith를 통해 패키지 간 순환 참조를 방지합니다.
+### 💑 Couple Management (핵심 도메인)
+*   **초대 코드 기반 매칭**: UUID 기반의 고유 초대 코드를 생성하고, 이를 통해 연인과 연결되는 시스템.
+*   **2인 제한 검증**: 커플 도메인의 비즈니스 규칙에 따라 한 커플당 최대 2명만 연결되도록 엄격한 검증 로직 적용.
+*   **연결 해제 및 이력 관리**: 커플 해제 시 데이터 파편화를 방지하고, `tb_couple_history`를 통해 과거 연결 이력을 영구 보존.
+*   **D-Day 및 기념일**: 기념일 자동 설정 및 사귄 날짜 계산 로직 구현.
+
+### 🔔 Event-driven Architecture
+*   **Spring Events 활용**: 커플 연결/해제 시 이벤트를 발행하여 알림 모듈 등 타 도메인과의 결합도를 제거.
+
+### 👮 Admin Statistics
+*   **이력 필터링 조회**: 관리자 전용 페이지를 위한 기간별(StartDate, EndDate) 커플 해제 이력 조회 API 제공.
+
+### 📝 API Documentation (Swagger)
+*   **Security Integration**: Swagger UI에서 바로 JWT 인증을 테스트할 수 있는 **Authorize** 기능 통합.
+*   **Schema Documentation**: 공통 응답 포맷(`ApiResponse`)의 명확한 문서화.
+*   **환경별 최적화**: 운영(PROD) 환경에서는 보안을 위해 자동으로 스웨거 비활성화.
+
+---
+
+## 🏗 Architecture (Modular Monolith)
+
+Spring Modulith의 규칙에 따라 각 모듈은 루트 패키지를 통해서만 외부와 소통합니다.
 
 ```text
 com.yeonghoon.heemo
-├── common       // 전역 공통 유틸리티 (Error Handling, BaseEntity)
-├── couple       // 커플 매칭 및 관계 관리 도메인
-├── healing      // 화해 및 AI 분석 도메인
-├── datecourse   // 데이트 장소 및 코스 도메인
-└── notification // 알림 처리 (Async Event Handling)
+├── common       // 공통 유틸리티, 시큐리티 설정, 공통 DTO
+├── auth         // OAuth2, JWT 인증 로직 (CustomOAuth2UserService)
+├── user         // 사용자 프로필 및 권한 관리
+├── couple       // 커플 매칭, 이력 관리, 기념일 로직
+└── notification // 알림 처리 (Event Listener 기반)
 ```
 
-## ⚙️ Getting Started
+---
 
-### Prerequisites
-*   JDK 21
+## ⚙️ How to Run
 
-### Run Application
+### Environment Variables
+다음 환경 변수가 설정되어야 합니다:
+*   `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+*   `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`
 
+### Run
 \`\`\`bash
 ./gradlew clean build
 java -jar build/libs/Heemo-API-0.0.1-SNAPSHOT.jar
 \`\`\`
 
-## 📝 API Documentation
-
-서버 실행 후 아래 주소에서 API 명세를 확인할 수 있습니다.
-*   Swagger UI: `http://localhost:8080/swagger-ui.html`
-
 ---
 **Developer**: Yeonghoon Mo  
-**Contact**: [GitHub Profile Link]
+**GitHub**: [https://github.com/Yeonghoon-mo](https://github.com/Yeonghoon-mo)

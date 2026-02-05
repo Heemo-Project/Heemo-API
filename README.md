@@ -1,103 +1,80 @@
 # Heemo API Server 🌸
 
 > **Relationship Management & Smart Date Curation Platform**  
-> "희모(Heemo)"는 연인 간의 건강한 관계 유지와 데이터 기반의 스마트한 데이트 경험을 제공하는 모바일 퍼스트 서비스의 백엔드 시스템입니다.
+> "희모(Heemo)"는 연인 간의 건강한 관계 유지와 데이터 기반의 스마트한 데이트 경험을 제공하는 서비스의 백엔드 시스템입니다.
 
 ---
 
 ## 📖 Project Overview
 
-### Problem Statement
-현대 연인들은 잦은 갈등 해결의 어려움과 매번 반복되는 데이트 코스 선택의 피로감을 겪고 있습니다. 
+### Vision
+현대 연인들이 겪는 관계 관리의 어려움을 IT 기술로 해결합니다. 감정 데이터 기반의 솔루션과 개인화된 데이트 큐레이션을 통해 더 깊은 유대감을 형성하는 것을 목표로 합니다.
 
-### Solution: Heemo
-*   **Healing Solution**: AI 기반의 감정 분석과 '백기(White Flag)' 시스템을 통해 갈등 상황에서 부드러운 화해의 계기를 제공합니다.
-*   **Smart Curation**: 사용자의 취향, 위치, 과거 데이터를 기반으로 최적의 데이트 동선과 장소를 추천합니다.
-*   **Modular Architecture**: 급변하는 요구사항에 유연하게 대응하기 위해 **Spring Modulith** 기반의 모듈형 구조를 채택하였습니다.
+### Project Focus
+본 프로젝트는 **Spring Modulith** 아키텍처를 기반으로 설계되어, 서비스 초기 단계에서의 빠른 개발 속도와 추후 비즈니스 확장에 따른 유연한 대응력을 동시에 확보하는 데 중점을 두었습니다.
 
 ---
 
 ## 🛠 Tech Stack
 
-### 🟦 Framework & Language
-*   **Kotlin 2.1.10** (JDK 21)
-*   **Spring Boot 3.4.2**
-*   **Spring Data JPA** & **QueryDSL 5.1.0** (Type-safe Dynamic Query)
-*   **Spring Modulith 1.3.1** (Modular Monolith)
+### 🟦 Backend Core
+*   **Kotlin 2.1.10**: 최신 문법과 강력한 코루틴 지원을 통한 생산성 향상.
+*   **Spring Boot 3.4.2**: 최신 안정화 버전 및 생태계 라이브러리(SpringDoc 등) 최적화.
+*   **Spring Data JPA** & **QueryDSL 5.1.0**: 타입 안전한 동적 쿼리 작성 및 데이터 접근 계층 추상화.
+*   **Spring Modulith 1.3.1**: 도메인 기반 모듈화로 결합도(Coupling)를 낮춘 아키텍처 구현.
 
 ### 🟨 Security & Infrastructure
-*   **Spring Security** & **OAuth2 Client** (Google, Kakao)
-*   **JWT (Json Web Token)**: Stateless Authentication
-*   **PostgreSQL 16**: Relational Database
-*   **Redis**: Refresh Token & Cache Layer (Planned)
+*   **OAuth2 + JWT**: Google, Kakao 소셜 로그인을 통한 간편 가입 및 Stateless 인증 시스템 구축.
+*   **PostgreSQL 16**: 안정적인 관계형 데이터 관리.
+*   **Swagger (SpringDoc 2.8.5)**: 프론트엔드 협업을 위한 API 문서 자동화 및 테스트 환경 제공.
 
 ---
 
 ## 🏗 System Architecture
 
-### Modular Monolith (Spring Modulith)
-서비스의 복잡도가 증가해도 유지보수가 용이하도록 **도메인 중심의 모듈화**를 적용했습니다. 각 모듈은 루트 패키지를 통해서만 노출되며, 직접적인 참조 대신 **Spring Events**를 통한 느슨한 결합(Loose Coupling)을 지향합니다.
+### Modular Monolith
+서비스의 각 기능을 독립적인 모듈로 정의하여 유지보수성을 극대화했습니다.
 
 ```text
 com.yeonghoon.heemo
-├── common       // 공통 컴포넌트 (Exception Handling, Response DTO, Security Utils)
-├── auth         // 소셜 로그인 처리 및 토큰 발급 로직
-├── user         // 사용자 개인 정보 및 프로필 관리
-├── couple       // 커플 매칭 시스템, 연결 이력(History) 및 기념일 관리
-└── notification // [Event Consumer] 외부 플랫폼 알림 전송 (Push, SMS)
+├── common       // 공통 컴포넌트 (Global Exception, Response DTO, Security)
+├── auth         // 소셜 인증 및 토큰 관리 로직
+├── user         // 사용자 프로필(MBTI, 생일 등) 및 권한 관리
+└── [Domain]     // (확장 예정) Couple, Healing, DateCourse 등
 ```
 
 ---
 
-## 🚀 Key Implementation Details
+## 🚀 Key Features (Current Implementation)
 
-### 1. Robust Couple Matching System
-*   **Invite Flow**: UUID 기반의 유니크한 초대 코드를 통해 보안성 높은 매칭 프로세스 구현.
-*   **Strict Business Rules**: 한 커플당 최대 2명만 연결되도록 쿼리 레벨에서 검증 로직 적용.
-*   **Audit History**: 연결 해제 시 `tb_couple_history`에 데이터를 이관하여 비즈니스 분석 데이터 확보 및 데이터 파편화 방지.
+### 🔑 Advanced Authentication
+*   **Social Login Integration**: 카카오 및 구글 OAuth2 인증을 통한 사용자 식별 및 자동 회원가입 프로세스.
+*   **JWT Security**: 보안 정책에 따른 Stateless 토큰 인증 및 권한(Role) 관리.
+*   **Fail-safe Nickname Generation**: 소셜 닉네임 부재 시 고유 ID 기반의 자동 임시 닉네임 부여 로직 구현.
 
-### 2. Event-driven Domain Communication
-*   모듈 간의 직접적인 서비스 호출을 지양하고 `ApplicationEventPublisher`를 활용.
-*   커플 연결/해제 시 이벤트를 발행하여 알림 모듈이 비동기적으로 처리할 수 있는 구조 설계.
+### 🛡 Robust Infrastructure
+*   **Global Exception Handling**: 전역 예외 처리기를 통해 표준화된 에러 응답(`ApiError`) 및 구체적인 에러 코드 제공.
+*   **Documented Common Response**: 모든 API 응답을 `ApiResponse<T>`로 캡슐화하고 Swagger를 통해 명확히 명세화.
+*   **Profile-based Configuration**: 운영(PROD) 환경의 보안을 위한 Swagger 자동 비활성화 등 환경별 최적화 설정.
 
-### 3. Type-safe Database Layer
-*   복잡한 조인 및 필터링 쿼리(예: 관리자용 이력 조회)를 **QueryDSL**로 구현하여 컴파일 타임에 오류를 발견하고 가독성을 극대화.
+### 📝 Developer Experience (DX)
+*   **Integrated Swagger Auth**: Swagger UI 내에서 바로 JWT 인증 테스트가 가능한 **Authorize** 기능 통합.
 
 ---
 
-## 📝 API Reference
-
-프론트엔드 개발자의 원활한 개발을 위해 자동화된 Swagger 문서를 제공합니다.
+## 📝 API Reference (Collaboration)
 
 *   **Swagger UI (Local)**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-*   **API Docs (JSON)**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
-
-> **💡 Integration Tip for Frontend**
-> 1.  OAuth2 로그인을 통해 `accessToken`을 발급받습니다.
-> 2.  Swagger UI 상단의 **Authorize** 버튼을 클릭하여 토큰을 입력합니다.
-> 3.  이후 모든 요청 헤더에 `Authorization: Bearer {token}`이 자동으로 포함됩니다.
-> 4.  **PROD 환경**에서는 보안을 위해 Swagger UI 접근이 차단됩니다.
+*   **API Docs**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 
 ---
 
-## ⚙️ Development Guide
+## ⚙️ How to Run
 
-### Prerequisites
-*   Java 21 / Kotlin 2.1.10
-*   Docker (PostgreSQL, Redis 가동용)
-
-### Application Setup
-\`\`\`bash
-# 1. Clone the repository
-git clone https://github.com/Heemo-Project/Heemo-API.git
-
-# 2. Configure Environment Variables (.env or application.yaml)
-# GOOGLE_CLIENT_ID / KAKAO_CLIENT_ID 등 필요
-
-# 3. Build & Run
-./gradlew bootRun
-\`\`\`
+### Setup
+1.  **Environment**: JDK 21 및 Docker(PostgreSQL)가 필요합니다.
+2.  **Run**: `./gradlew bootRun` 명령어로 서버를 실행합니다.
 
 ---
-**Lead Developer**: Yeonghoon Mo ([GitHub](https://github.com/Yeonghoon-mo))  
-**Project Repository**: [Heemo-Project/Heemo-API](https://github.com/Heemo-Project/Heemo-API)
+**Developer**: Yeonghoon Mo ([GitHub](https://github.com/Yeonghoon-mo))  
+**Organization**: Heemo Project

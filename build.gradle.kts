@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    id("org.springframework.boot") version "4.0.2"
+    kotlin("jvm") version "2.1.10"
+    kotlin("plugin.spring") version "2.1.10"
+    id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "2.2.21"
-    kotlin("kapt") version "2.2.21"
+    kotlin("plugin.jpa") version "2.1.10"
+    kotlin("kapt") version "2.1.10"
 }
 
 group = "com.yeonghoon"
@@ -27,7 +27,7 @@ repositories {
     mavenCentral()
 }
 
-extra["springModulithVersion"] = "2.0.2"
+extra["springModulithVersion"] = "1.3.1"
 
 dependencies {
     // --- Spring Boot Starters ---

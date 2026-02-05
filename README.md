@@ -3,8 +3,8 @@
 > **Couple Healing & Date Course Service Backend**  
 > 자주 다투는 연인을 위한 화해 솔루션 및 스마트 데이트 코스 추천 서비스
 
-![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.1.10-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.2-6DB33F?style=flat-square&logo=springboot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![Spring Modulith](https://img.shields.io/badge/Spring%20Modulith-Applied-green?style=flat-square)
 
@@ -30,12 +30,12 @@
 ## 🛠 Tech Stack & Decision Making
 
 ### Backend
-*   **Language**: `Kotlin` (JDK 17/21) - 간결한 문법과 Null Safety를 통한 안정성 확보.
-*   **Framework**: `Spring Boot 3.2` - 최신 스프링 생태계 활용.
+*   **Language**: `Kotlin 2.1.10` (JDK 21) - 강력한 코루틴 지원과 Null Safety를 통한 안정성 확보.
+*   **Framework**: `Spring Boot 3.4.2` - 최신 안정화 버전 활용. (기존 4.0.2-SNAPSHOT에서 라이브러리 호환성 이슈로 인해 3.4.2로 다운그레이드 및 최적화 진행)
 *   **Database**: `PostgreSQL` - 복잡한 연관 관계 및 공간 데이터(PostGIS) 확장을 고려.
 *   **ORM**: `Spring Data JPA` + `QueryDSL` - 타입 안전한(Type-safe) 동적 쿼리 작성 및 컴파일 타임 오류 감지.
-*   **Architecture**: `Spring Modulith` - 도메인 간 결합도를 낮추고, 추후 마이크로서비스(MSA) 전환이 용이한 구조 채택.
-*   **Documentation**: `Swagger (SpringDoc)` - 프론트엔드와의 원활한 협업을 위한 API 문서 자동화.
+*   **Architecture**: `Spring Modulith 1.3.1` - 도메인 간 결합도를 낮추고, 추후 마이크로서비스(MSA) 전환이 용이한 구조 채택.
+*   **Documentation**: `Swagger (SpringDoc 2.8.5)` - 프론트엔드와의 원활한 협업을 위한 API 문서 자동화.
 
 ### Infrastructure (Planned)
 *   **CI/CD**: GitHub Actions

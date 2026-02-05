@@ -58,19 +58,26 @@ com.yeonghoon.heemo
 
 ### Prerequisites
 *   JDK 21
-*   PostgreSQL 16+ (Local Installation)
+*   Docker & Docker Compose
+
+### Infrastructure Setup
+
+개발에 필요한 외부 인프라(PostgreSQL, Redis)를 Docker Compose를 통해 실행합니다.
+
+\`\`\`bash
+# 인프라 실행
+docker-compose up -d
+
+# 인프라 중지 및 데이터 유지
+docker-compose stop
+\`\`\`
 
 ### Run Application
 
-1. **Database Setup**
-   *   로컬에 PostgreSQL을 설치하고 `heemo`라는 이름의 데이터베이스를 생성해주세요.
-   *   `src/main/resources/application.yaml`에서 DB 계정 정보를 확인해주세요.
-
-2. **Build & Run**
-   ```bash
-   ./gradlew clean build
-   java -jar build/libs/Heemo-API-0.0.1-SNAPSHOT.jar
-   ```
+\`\`\`bash
+./gradlew clean build
+java -jar build/libs/Heemo-API-0.0.1-SNAPSHOT.jar
+\`\`\`
 
 ## 📝 API Documentation
 

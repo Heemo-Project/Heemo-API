@@ -2,12 +2,12 @@ spring:
   application:
     name: Heemo-API
   
-  # 기능별 설정 파일 임포트
+  # 기능별 설정 파일 임포트 (application- 접두어 제거됨)
   config:
     import:
-      - optional:application-database.yaml
-      - optional:application-redis.yaml
+      - optional:postgresql.yaml
+      - optional:redis.yaml
 
-  # 기본 프로파일 설정
+  # 기본 프로파일 설정 (여기서 변경 가능)
   profiles:
     active: local

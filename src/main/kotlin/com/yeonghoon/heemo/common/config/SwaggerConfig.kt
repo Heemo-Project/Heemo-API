@@ -30,7 +30,7 @@ class SwaggerConfig {
             .info(
                 Info()
                     .title("Heemo API")
-                    .description("Relationship Management & Smart Date Curation Platform 'Heemo' API Documentation")
+                    .description("커플 힐링 & 데이트 코스 서비스 'Heemo' API 문서")
                     .version("v0.0.1")
             )
             .addSecurityItem(securityRequirement)

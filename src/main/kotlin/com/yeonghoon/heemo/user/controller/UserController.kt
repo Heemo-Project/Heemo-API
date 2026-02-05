@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "User", description = "User Management API")
+@Tag(name = "User", description = "사용자 관련 API")
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController(
     private val userService: UserService
 ) {
 
-    @Operation(summary = "Get User Profile", description = "Retrieve user information by ID.")
+    @Operation(summary = "사용자 조회", description = "ID를 통해 사용자 정보를 조회합니다.")
     @GetMapping("/{id}")
     suspend fun getUser(@PathVariable id: Long): ApiResponse<User> {
         val user = userService.getUser(id)

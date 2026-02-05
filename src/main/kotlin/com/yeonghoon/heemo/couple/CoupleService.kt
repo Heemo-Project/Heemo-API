@@ -70,7 +70,7 @@ class CoupleService(
         userRepository.save(user)
 
         // 매칭 완료 이벤트 발행 (상대방 찾기)
-        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId)
+        val partner = userRepository.findPartner(couple.id!!, userId)
             .orElseThrow { IllegalStateException("Partner not found in couple") }
 
         val partnerId = partner.id!!
@@ -101,7 +101,7 @@ class CoupleService(
         val coupleId = couple.id!!
 
         // 1. 상대방 찾기
-        val partner = userRepository.findByCoupleIdAndIdNot(coupleId, userId)
+        val partner = userRepository.findPartner(coupleId, userId)
         val partnerId = partner.map { it.id }.orElse(null)
 
         // 2. 이력 저장 (History)
@@ -144,7 +144,7 @@ class CoupleService(
             .orElseThrow { IllegalArgumentException("User not found") }
         
         val couple = user.couple ?: throw IllegalStateException("User is not in a couple")
-        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId).orElse(null)
+        val partner = userRepository.findPartner(couple.id!!, userId).orElse(null)
 
         val dDay = couple.anniversaryDate?.let { 
             ChronoUnit.DAYS.between(it, LocalDate.now()) + 1 
@@ -174,7 +174,7 @@ class CoupleService(
         couple.anniversaryDate = newDate
         user.anniversaryDate = newDate
         
-        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId)
+        val partner = userRepository.findPartner(couple.id!!, userId)
         partner.ifPresent {
             it.anniversaryDate = newDate
             userRepository.save(it)
@@ -206,6 +206,6 @@ class CoupleService(
      */
     @Transactional(readOnly = true)
     suspend fun getMyCoupleHistory(userId: Long): List<CoupleHistory> = withContext(Dispatchers.IO) {
-        coupleHistoryRepository.findByMember1IdOrMember2IdOrderByDisconnectedAtDesc(userId, userId)
+        coupleHistoryRepository.findByMemberId(userId)
     }
 }

@@ -1,6 +1,6 @@
-package com.yeonghoon.heemo.auth.handler
+package com.yeonghoon.heemo.auth
 
-import com.yeonghoon.heemo.common.security.JwtTokenProvider
+import com.yeonghoon.heemo.common.JwtTokenProvider
 import com.yeonghoon.heemo.user.SocialProvider
 import com.yeonghoon.heemo.user.UserRepository
 import jakarta.servlet.http.HttpServletRequest

@@ -1,8 +1,8 @@
 package com.yeonghoon.heemo.user.controller
 
-import com.yeonghoon.heemo.common.dto.ApiResponse
+import com.yeonghoon.heemo.common.ApiResponse
 import com.yeonghoon.heemo.user.User
-import com.yeonghoon.heemo.user.service.UserService
+import com.yeonghoon.heemo.user.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping

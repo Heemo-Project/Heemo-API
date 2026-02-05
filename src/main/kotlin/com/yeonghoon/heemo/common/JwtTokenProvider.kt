@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.common.security
+package com.yeonghoon.heemo.common
 
 import com.yeonghoon.heemo.user.Role
 import io.jsonwebtoken.Claims

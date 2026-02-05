@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.common.dto
+package com.yeonghoon.heemo.common
 
 import com.fasterxml.jackson.annotation.JsonInclude
 

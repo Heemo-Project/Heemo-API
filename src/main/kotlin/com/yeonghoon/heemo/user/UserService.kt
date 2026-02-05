@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.user.service
+package com.yeonghoon.heemo.user
 
 import com.yeonghoon.heemo.user.User
 import com.yeonghoon.heemo.user.UserRepository

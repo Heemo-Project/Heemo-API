@@ -1,6 +1,6 @@
 package com.yeonghoon.heemo.common.exception
 
-import com.yeonghoon.heemo.common.dto.ApiResponse
+import com.yeonghoon.heemo.common.ApiResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

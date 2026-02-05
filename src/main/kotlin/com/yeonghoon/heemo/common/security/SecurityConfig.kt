@@ -1,7 +1,8 @@
 package com.yeonghoon.heemo.common.security
+import com.yeonghoon.heemo.common.JwtTokenProvider
 
-import com.yeonghoon.heemo.auth.handler.OAuth2LoginSuccessHandler
-import com.yeonghoon.heemo.auth.service.CustomOAuth2UserService
+import com.yeonghoon.heemo.auth.OAuth2LoginSuccessHandler
+import com.yeonghoon.heemo.auth.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

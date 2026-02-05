@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.auth.service
+package com.yeonghoon.heemo.auth
 
 import com.yeonghoon.heemo.auth.dto.OAuthAttributes
 import com.yeonghoon.heemo.user.SocialProvider

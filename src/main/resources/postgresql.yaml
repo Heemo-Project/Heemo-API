@@ -5,8 +5,8 @@ spring:
       on-profile: local
   datasource:
     url: jdbc:postgresql://localhost:5432/heemo
-    username: heemo_user
-    password: heemo_password
+    username: root
+    password: "1361"
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

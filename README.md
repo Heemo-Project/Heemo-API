@@ -58,19 +58,6 @@ com.yeonghoon.heemo
 
 ### Prerequisites
 *   JDK 21
-*   Docker & Docker Compose
-
-### Infrastructure Setup
-
-개발에 필요한 외부 인프라(PostgreSQL, Redis)를 Docker Compose를 통해 실행합니다.
-
-\`\`\`bash
-# 인프라 실행
-docker-compose up -d
-
-# 인프라 중지 및 데이터 유지
-docker-compose stop
-\`\`\`
 
 ### Run Application
 

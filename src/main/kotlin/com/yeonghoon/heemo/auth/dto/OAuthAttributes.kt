@@ -46,12 +46,15 @@ data class OAuthAttributes(
         ): OAuthAttributes {
             val kakaoAccount = attributes["kakao_account"] as Map<*, *>
             val profile = kakaoAccount["profile"] as Map<*, *>?
+            val socialId = attributes["id"].toString()
+            // Nickname이 없을 경우 랜덤닉네임 생성
+            val nickname = profile?.get("nickname") as String? ?: "Hemmo-${socialId.takeLast(4)}"
             
             return OAuthAttributes(
                 attributes = attributes,
                 nameAttributeKey = userNameAttributeName,
-                socialId = attributes["id"].toString(),
-                nickname = profile?.get("nickname") as String? ?: "Unknown",
+                socialId = socialId,
+                nickname = nickname,
                 email = kakaoAccount["email"] as String?,
                 profileImageUrl = profile?.get("profile_image_url") as String?,
                 provider = SocialProvider.KAKAO

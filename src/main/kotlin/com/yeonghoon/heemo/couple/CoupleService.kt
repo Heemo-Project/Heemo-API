@@ -181,4 +181,12 @@ class CoupleService(
         userRepository.save(user)
         coupleRepository.save(couple)
     }
+
+    /**
+     * [관리자] 커플 이력 전체 조회
+     */
+    @Transactional(readOnly = true)
+    suspend fun getAllCoupleHistories(): List<CoupleHistory> = withContext(Dispatchers.IO) {
+        coupleHistoryRepository.findAll()
+    }
 }

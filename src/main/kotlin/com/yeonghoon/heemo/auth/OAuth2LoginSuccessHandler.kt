@@ -18,7 +18,9 @@ import java.util.*
 class OAuth2LoginSuccessHandler(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
-    @Value("\${app.oauth2.authorized-redirect-uri}") private val redirectUri: String
+
+    @Value("\${app.oauth2.authorized-redirect-uri}")
+    private val redirectUri: String
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     override fun onAuthenticationSuccess(

@@ -1,15 +1,19 @@
 package com.yeonghoon.heemo.couple
 
+import com.yeonghoon.heemo.couple.dto.CoupleInfoResponse
 import com.yeonghoon.heemo.user.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 @Service
 class CoupleService(
     private val coupleRepository: CoupleRepository,
+    private val coupleHistoryRepository: CoupleHistoryRepository,
     private val userRepository: UserRepository,
     private val eventPublisher: ApplicationEventPublisher
 ) {
@@ -55,35 +59,31 @@ class CoupleService(
         }
 
         user.couple = couple
+        // 연결 시 오늘을 기념일로 자동 설정 (없을 경우)
+        if (couple.anniversaryDate == null) {
+            couple.anniversaryDate = LocalDate.now()
+            user.anniversaryDate = LocalDate.now()
+        }
+        
         userRepository.save(user)
 
         // 매칭 완료 이벤트 발행 (상대방 찾기)
-        // 현재 커플 ID를 가진 다른 유저(상대방)를 찾아서 이벤트에 포함
-        // 주의: 위에서 save를 호출했지만 트랜잭션이 아직 커밋되지 않았을 수 있으므로
-        // 현재 로직상 상대방은 DB에 이미 저장되어 있는 유일한 1명임.
-        // 하지만 안전하게 로직을 구성하려면 쿼리가 필요할 수도 있음.
-        // 여기서는 간단하게 '상대방이 누구인지'는 이벤트 리스너에서 조회하거나
-        // 혹은 여기서 조회해서 넘겨줄 수 있음.
-        
-        // 현재 user(나)와 couple에 이미 연결된 다른 유저(상대방) 조회
-        // (현재 유저는 아직 커밋 전이라 count에 포함 안 될 수도 있지만, save 호출 순서에 따라 다름)
-        // JPA 영속성 컨텍스트 고려 시, 가장 확실한 건 couple 객체만 넘기거나
-        // 여기서 상대방 ID를 찾는 것임. 하지만 여기서는 일단 이벤트를 발행하고
-        // 이벤트 핸들러가 처리하도록 설계하는 것이 깔끔함.
-        
-        // 편의상 상대방 ID를 찾아서 이벤트에 담아줌 (이미 1명이 대기 중이므로)
-        // *주의*: `user` 엔티티는 이 시점에 couple이 세팅되었지만 flush 전일 수 있음.
-        // 기존에 등록된 유저를 찾음 (자신 제외)
-        // 하지만 더 간단하게, 이벤트에는 '누가 연결되었는지'만 담고 
-        // 알림 서비스가 알아서 '누가 이 커플에 있는지' 조회해서 알림을 보내는 게 나음.
-        
-        val partner = userRepository.findByCoupleIdAndIdNot(couple.id, userId)
+        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId)
             .orElseThrow { IllegalStateException("Partner not found in couple") }
 
+        val partnerId = partner.id!!
+        val coupleId = couple.id!!
+
+        // 상대방 기념일도 동기화
+        if (partner.anniversaryDate == null) {
+            partner.anniversaryDate = couple.anniversaryDate
+            userRepository.save(partner)
+        }
+
         eventPublisher.publishEvent(CoupleConnectedEvent(
-            coupleId = couple.id,
+            coupleId = coupleId,
             userId1 = userId,
-            userId2 = partner.id!!
+            userId2 = partnerId
         ))
     }
 
@@ -100,26 +100,85 @@ class CoupleService(
 
         // 1. 상대방 찾기
         val partner = userRepository.findByCoupleIdAndIdNot(coupleId, userId)
+        val partnerId = partner.map { it.id }.orElse(null)
 
-        // 2. 상대방 연결 해제
+        // 2. 이력 저장 (History)
+        val history = CoupleHistory(
+            coupleId = coupleId,
+            member1Id = userId,
+            member2Id = partnerId,
+            connectedAt = couple.createdAt
+        )
+        coupleHistoryRepository.save(history)
+
+        // 3. 상대방 연결 해제
         partner.ifPresent {
             it.couple = null
             userRepository.save(it)
         }
 
-        // 3. 내 연결 해제
+        // 4. 내 연결 해제
         user.couple = null
         userRepository.save(user)
 
-        // 4. 커플 상태 변경
+        // 5. 커플 상태 변경
         couple.status = CoupleStatus.DISCONNECTED
         coupleRepository.save(couple)
 
-        // 5. 연결 해제 이벤트 발행
+        // 6. 연결 해제 이벤트 발행
         eventPublisher.publishEvent(CoupleDisconnectedEvent(
             coupleId = coupleId,
             userId1 = userId,
-            userId2 = partner.map { it.id }.orElse(null)
+            userId2 = partnerId
         ))
+    }
+
+    /**
+     * 내 커플 정보 조회
+     */
+    @Transactional(readOnly = true)
+    suspend fun getCoupleInfo(userId: Long): CoupleInfoResponse = withContext(Dispatchers.IO) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+        
+        val couple = user.couple ?: throw IllegalStateException("User is not in a couple")
+        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId).orElse(null)
+
+        val dDay = couple.anniversaryDate?.let { 
+            ChronoUnit.DAYS.between(it, LocalDate.now()) + 1 
+        }
+
+        CoupleInfoResponse(
+            coupleId = couple.id!!,
+            inviteCode = couple.inviteCode,
+            anniversaryDate = couple.anniversaryDate,
+            myNickname = user.nickname,
+            partnerNickname = partner?.nickname,
+            dDay = dDay
+        )
+    }
+
+    /**
+     * 기념일 수정
+     */
+    @Transactional
+    suspend fun updateAnniversary(userId: Long, newDate: LocalDate) = withContext(Dispatchers.IO) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        val couple = user.couple ?: throw IllegalStateException("User is not in a couple")
+        
+        // 커플 엔티티 및 멤버들 업데이트
+        couple.anniversaryDate = newDate
+        user.anniversaryDate = newDate
+        
+        val partner = userRepository.findByCoupleIdAndIdNot(couple.id!!, userId)
+        partner.ifPresent {
+            it.anniversaryDate = newDate
+            userRepository.save(it)
+        }
+        
+        userRepository.save(user)
+        coupleRepository.save(couple)
     }
 }

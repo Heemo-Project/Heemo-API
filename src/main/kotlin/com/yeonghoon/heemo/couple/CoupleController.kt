@@ -1,6 +1,8 @@
 package com.yeonghoon.heemo.couple
 
 import com.yeonghoon.heemo.common.ApiResponse
+import com.yeonghoon.heemo.couple.dto.CoupleInfoResponse
+import com.yeonghoon.heemo.couple.dto.UpdateAnniversaryRequest
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -38,6 +40,25 @@ class CoupleController(
         @AuthenticationPrincipal userId: Long
     ): ApiResponse<Unit> {
         coupleService.disconnect(userId)
+        return ApiResponse.success(Unit)
+    }
+
+    @Operation(summary = "내 커플 정보 조회", description = "현재 연결된 커플 정보를 조회합니다.")
+    @GetMapping
+    suspend fun getCoupleInfo(
+        @AuthenticationPrincipal userId: Long
+    ): ApiResponse<CoupleInfoResponse> {
+        val info = coupleService.getCoupleInfo(userId)
+        return ApiResponse.success(info)
+    }
+
+    @Operation(summary = "기념일 수정", description = "커플 기념일을 수정합니다. (상대방 정보도 함께 업데이트됨)")
+    @PatchMapping("/anniversary")
+    suspend fun updateAnniversary(
+        @AuthenticationPrincipal userId: Long,
+        @RequestBody request: UpdateAnniversaryRequest
+    ): ApiResponse<Unit> {
+        coupleService.updateAnniversary(userId, request.date)
         return ApiResponse.success(Unit)
     }
 }

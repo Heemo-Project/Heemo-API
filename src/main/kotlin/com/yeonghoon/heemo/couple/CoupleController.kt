@@ -61,6 +61,15 @@ class CoupleController(
         coupleService.updateAnniversary(userId, request.date)
         return ApiResponse.success(Unit)
     }
+
+    @Operation(summary = "내 커플 이력 조회", description = "본인의 과거 커플 연결 및 해제 이력을 조회합니다.")
+    @GetMapping("/history")
+    suspend fun getMyHistory(
+        @AuthenticationPrincipal userId: Long
+    ): ApiResponse<List<CoupleHistory>> {
+        val history = coupleService.getMyCoupleHistory(userId)
+        return ApiResponse.success(history)
+    }
 }
 
 data class ConnectRequest(

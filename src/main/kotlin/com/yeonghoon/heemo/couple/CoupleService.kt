@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 @Service
@@ -183,10 +185,27 @@ class CoupleService(
     }
 
     /**
-     * [관리자] 커플 이력 전체 조회
+     * [관리자] 커플 이력 전체 조회 (기간 필터링 포함)
      */
     @Transactional(readOnly = true)
-    suspend fun getAllCoupleHistories(): List<CoupleHistory> = withContext(Dispatchers.IO) {
-        coupleHistoryRepository.findAll()
+    suspend fun getAllCoupleHistories(
+        startDate: LocalDate?,
+        endDate: LocalDate?
+    ): List<CoupleHistory> = withContext(Dispatchers.IO) {
+        if (startDate != null && endDate != null) {
+            val start = startDate.atStartOfDay()
+            val end = endDate.atTime(LocalTime.MAX)
+            coupleHistoryRepository.findByDisconnectedAtBetween(start, end)
+        } else {
+            coupleHistoryRepository.findAll()
+        }
+    }
+
+    /**
+     * [사용자] 본인의 과거 커플 이력 조회
+     */
+    @Transactional(readOnly = true)
+    suspend fun getMyCoupleHistory(userId: Long): List<CoupleHistory> = withContext(Dispatchers.IO) {
+        coupleHistoryRepository.findByMember1IdOrMember2IdOrderByDisconnectedAtDesc(userId, userId)
     }
 }

@@ -1,21 +1,13 @@
 spring:
   application:
     name: Heemo-API
-  datasource:
-    url: jdbc:postgresql://localhost:5432/heemo
-    username: heemo_user
-    password: heemo_password
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        default_batch_fetch_size: 100
-  data:
-    redis:
-      host: localhost
-      port: 6379
+  
+  # 기능별 설정 파일 임포트
+  config:
+    import:
+      - optional:application-database.yaml
+      - optional:application-redis.yaml
+
+  # 기본 프로파일 설정
+  profiles:
+    active: local

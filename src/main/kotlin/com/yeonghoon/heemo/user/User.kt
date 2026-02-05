@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.user.domain
+package com.yeonghoon.heemo.user
 
 import com.yeonghoon.heemo.common.BaseEntity
 import jakarta.persistence.*
@@ -25,6 +25,13 @@ class User(
 
     @Column(nullable = false, length = 50)
     var nickname: String,
+
+    @Column(length = 500)
+    var profileImageUrl: String? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    var gender: Gender? = null,
 
     @Column
     var birthday: LocalDate? = null,

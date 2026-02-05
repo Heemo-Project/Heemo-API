@@ -1,4 +1,4 @@
-package com.yeonghoon.heemo.user.domain
+package com.yeonghoon.heemo.user
 
 enum class Role {
     USER, ADMIN
@@ -6,4 +6,8 @@ enum class Role {
 
 enum class SocialProvider {
     KAKAO, GOOGLE
+}
+
+enum class Gender {
+    MALE, FEMALE, OTHER
 }

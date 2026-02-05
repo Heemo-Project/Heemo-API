@@ -1,7 +1,5 @@
-package com.yeonghoon.heemo.user.repository
+package com.yeonghoon.heemo.user
 
-import com.yeonghoon.heemo.user.domain.SocialProvider
-import com.yeonghoon.heemo.user.domain.User
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

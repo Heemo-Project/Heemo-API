@@ -1,8 +1,8 @@
-package com.yeonghoon.heemo.user.repository
+package com.yeonghoon.heemo.user
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.yeonghoon.heemo.user.domain.QUser.user
-import com.yeonghoon.heemo.user.domain.User
+import com.yeonghoon.heemo.user.QUser.user
+import com.yeonghoon.heemo.user.User
 import org.springframework.stereotype.Repository
 
 @Repository

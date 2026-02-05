@@ -1,7 +1,7 @@
 package com.yeonghoon.heemo.user.service
 
-import com.yeonghoon.heemo.user.domain.User
-import com.yeonghoon.heemo.user.repository.UserRepository
+import com.yeonghoon.heemo.user.User
+import com.yeonghoon.heemo.user.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service

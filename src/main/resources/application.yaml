@@ -47,3 +47,16 @@ jwt:
 app:
   oauth2:
     authorized-redirect-uri: http://localhost:3000/oauth2/redirect # 프론트엔드 리다이렉트 주소
+
+---
+# --- Prod Profile ---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
